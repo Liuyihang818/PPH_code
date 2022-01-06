@@ -37,22 +37,22 @@ df
 # In[4]:
 
 
-df['出血标注']=0
+df['PPH_index']=0
 dropindex=[]
 for index,row in df.iterrows():
-    if row['产后出血量'] >=450:
-        df.loc[index:index,('出血标注')]=1
-        #print(df.loc[index:index,('出血标注')])
+    if row['Postpartum blood loss'] >=450:
+        df.loc[index:index,('PPH_index')]=1
+        #print(df.loc[index:index,('PPH_index')])
     else:
-        if pd.isna(row['产后出血量']): 
+        if pd.isna(row['Postpartum blood loss']): 
             dropindex.append(index)
             #tempdf.drop(index=index)
 df.drop(index=dropindex,inplace=True)
 #Delete less useful column data
 dropcol=[]
 
-dropcol.append('产后出血量')
-dropcol.append('产后出血')
+dropcol.append('Postpartum blood loss')
+dropcol.append('PPH')
 df.drop(axis=1,columns=dropcol,inplace=True)
 
 
@@ -60,10 +60,10 @@ df.drop(axis=1,columns=dropcol,inplace=True)
 
 
 from sklearn import preprocessing
-tempvalue=df.loc[:,'引产方式'].values.reshape(-1,1)
-df.loc[:,'引产方式']= OrdinalEncoder().fit_transform(tempvalue)
-tempvalue=df.loc[:,'分娩方式'].values.reshape(-1,1)
-df.loc[:,'分娩方式']= OrdinalEncoder().fit_transform(tempvalue)
+tempvalue=df.loc[:,'Hormone'].values.reshape(-1,1)
+df.loc[:,'Hormone']= OrdinalEncoder().fit_transform(tempvalue)
+tempvalue=df.loc[:,'Mode of delivery'].values.reshape(-1,1)
+df.loc[:,'Mode of delivery']= OrdinalEncoder().fit_transform(tempvalue)
 data_normalized =preprocessing.normalize(df,norm='l1') 
 data_normalized
 
@@ -80,8 +80,8 @@ df
 
 df = shuffle(df)
 df_train,df_test = train_test_split(df,test_size = 0.2)
-traindata_y=df_train['出血标注'].values
-testdata_y=df_test['出血标注'].values
+traindata_y=df_train['PPH_index'].values
+testdata_y=df_test['PPH_index'].values
 cols=[]
 lens=df.columns.values.__len__()-1
 for i in range(lens):
@@ -95,17 +95,17 @@ testdata_x=df_test[cols].values
 
 # Acquisition of all the training data marked as 1, and 4 times training data marked as 0
 def product_model():
-    true_flag=df_train[df_train.出血标注==1]
-    false_flag=df_train[df_train.出血标注==0]
+    true_flag=df_train[df_train.PPH_index==1]
+    false_flag=df_train[df_train.PPH_index==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
-    traindata_Y=traindata['出血标注'].values
+    traindata_Y=traindata['PPH_index'].values
     cols=[]
     lens=traindata.columns.values.__len__()-1
     for i in range(lens):
         cols.append(traindata.columns.values[i])
         traindata_x=traindata[cols].values
-    rand_model = RandomForestClassifier()#随机森林模型
+    rand_model = RandomForestClassifier() 
     rand_model.fit(traindata_x,traindata_Y)
     return rand_model
 
@@ -177,28 +177,28 @@ df= pd.read_csv(r"C:\Users\yihan\Desktop\final.csv",encoding="gbk")
 df
 df=df.dropna()
 df
-df['出血标注']=0
+df['PPH_index']=0
 dropindex=[]
 for index,row in df.iterrows():
-    if row['产后出血量'] >=450:
-        df.loc[index:index,('出血标注')]=1
-        #print(df.loc[index:index,('出血标注')])
+    if row['Postpartum blood loss'] >=450:
+        df.loc[index:index,('PPH_index')]=1
+        #print(df.loc[index:index,('PPH_index')])
     else:
-        if pd.isna(row['产后出血量']): 
+        if pd.isna(row['Postpartum blood loss']): 
             dropindex.append(index)
             #tempdf.drop(index=index)
 df.drop(index=dropindex,inplace=True)
 #Delete less useful column data
 dropcol=[]
 
-dropcol.append('产后出血量')
-dropcol.append('产后出血')
+dropcol.append('Postpartum blood loss')
+dropcol.append('PPH')
 df.drop(axis=1,columns=dropcol,inplace=True)
 from sklearn import preprocessing
-tempvalue=df.loc[:,'引产方式'].values.reshape(-1,1)
-df.loc[:,'引产方式']= OrdinalEncoder().fit_transform(tempvalue)
-tempvalue=df.loc[:,'分娩方式'].values.reshape(-1,1)
-df.loc[:,'分娩方式']= OrdinalEncoder().fit_transform(tempvalue)
+tempvalue=df.loc[:,'Hormone'].values.reshape(-1,1)
+df.loc[:,'Hormone']= OrdinalEncoder().fit_transform(tempvalue)
+tempvalue=df.loc[:,'Mode of delivery'].values.reshape(-1,1)
+df.loc[:,'Mode of delivery']= OrdinalEncoder().fit_transform(tempvalue)
 dn=df
 del dn["出血标注"]
 data_normalized =preprocessing.normalize(dn,norm='l1') 
@@ -209,7 +209,7 @@ data_normalized
 
 
 from sklearn import neighbors
-y=df['出血标注']
+y=df['PPH_index']
 traindata_x,testdata_x,traindata_y,testdata_y = train_test_split(data_normalized,y,test_size=0.2,random_state=42)
 
 
@@ -218,12 +218,12 @@ traindata_x,testdata_x,traindata_y,testdata_y = train_test_split(data_normalized
 
 # Acquisition of all the training data marked as 1, and 4 times training data marked as 0
 def product_model():
-    true_flag=df_train[df_train.出血标注==1]
-    false_flag=df_train[df_train.出血标注==0]
+    true_flag=df_train[df_train.PPH_index==1]
+    false_flag=df_train[df_train.PPH_index==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
      
-    traindata_Y=traindata['出血标注'].values
+    traindata_Y=traindata['PPH_index'].values
      
     cols=[]
     lens=traindata.columns.values.__len__()-1
@@ -297,11 +297,11 @@ from sklearn.svm import SVC
 
 # Acquisition of all the training data marked as 1, and 4 times training data marked as 0
 def product_model():
-    true_flag=df_train[df_train.出血标注==1]
-    false_flag=df_train[df_train.出血标注==0]
+    true_flag=df_train[df_train.PPH_index==1]
+    false_flag=df_train[df_train.PPH_index==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
-    traindata_Y=traindata['出血标注'].values
+    traindata_Y=traindata['PPH_index'].values
     cols=[]
     lens=traindata.columns.values.__len__()-1
     for i in range(lens):
