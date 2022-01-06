@@ -21,7 +21,7 @@ from sklearn.model_selection import GridSearchCV
 
 
 # In[2]:
-# 读取数据
+# read data
 
 df= pd.read_csv(r"C:\Users\Desktop\data.csv",encoding="gbk")
 df
@@ -78,14 +78,10 @@ df
 
 # In[7]:
 
-
-#随机排序
 df = shuffle(df)
 df_train,df_test = train_test_split(df,test_size = 0.2)
-#获取标注的数据
 traindata_y=df_train['出血标注'].values
 testdata_y=df_test['出血标注'].values
-#获取训练数据
 cols=[]
 lens=df.columns.values.__len__()-1
 for i in range(lens):
@@ -103,10 +99,7 @@ def product_model():
     false_flag=df_train[df_train.出血标注==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
-    #获得训练数据
-    #获取标注的数据
     traindata_Y=traindata['出血标注'].values
-    #获取训练数据
     cols=[]
     lens=traindata.columns.values.__len__()-1
     for i in range(lens):
@@ -155,18 +148,14 @@ for i in range(0,length):
         testdata_preY.append(0)
 
 
-#按以上投票规则，对测试数据的预测结果进行分析，看正确率、准确率、及召回率等指标
+#the prediction results of the test data are analyzed to look at the accuracy rate, accuracy rate, and recall rate
 testdata_preY=np.array(testdata_preY)
-#正确率
 accuracy_value=accuracy_score(testdata_y, testdata_preY)
 print(accuracy_value)
-#精确率
 precison_value=precision_score(testdata_y, testdata_preY)
 print(precison_value)
-#召回率
 recall_value=recall_score(testdata_y, testdata_preY)
 print(recall_value)
-#F值
 f_value=(precison_value*recall_value*2)/(precison_value+recall_value)
 print(f_value)
 
@@ -174,9 +163,8 @@ print(f_value)
 # In[11]:
 
 
-#预测结果给出的出血记录数。
+
 print(testdata_preY.sum())
-#测试数据的真实出血记录数
 print(testdata_y.sum())
 
 
@@ -234,10 +222,9 @@ def product_model():
     false_flag=df_train[df_train.出血标注==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
-    #获得训练数据
-    #获取标注的数据
+     
     traindata_Y=traindata['出血标注'].values
-    #获取训练数据
+     
     cols=[]
     lens=traindata.columns.values.__len__()-1
     for i in range(lens):
@@ -286,15 +273,12 @@ for i in range(0,length):
         testdata_preY.append(0)
 
 
-#按以上投票规则，对测试数据的预测结果进行分析，看正确率、准确率、及召回率等指标
  
-#正确率
+ 
 accuracy_value=accuracy_score(testdata_y, testdata_preY)
 print(accuracy_value)
-#精确率
 precison_value=precision_score(testdata_y, testdata_preY)
 print(precison_value)
-#召回率
 recall_value=recall_score(testdata_y, testdata_preY)
 print(recall_value)
 f_value=(precison_value*recall_value*2)/(precison_value+recall_value)
@@ -317,10 +301,7 @@ def product_model():
     false_flag=df_train[df_train.出血标注==0]
     tempdata=false_flag.sample(n=3*true_flag.__len__())
     traindata=pd.concat([tempdata,true_flag])
-    #获得训练数据
-    #获取标注的数据
     traindata_Y=traindata['出血标注'].values
-    #获取训练数据
     cols=[]
     lens=traindata.columns.values.__len__()-1
     for i in range(lens):
@@ -368,16 +349,13 @@ for i in range(0,length):
     else:
         testdata_preY.append(0)
 
-
-#按以上投票规则，对测试数据的预测结果进行分析，看正确率、准确率、及召回率等指标
  
-#正确率
+ 
+ 
 accuracy_value=accuracy_score(testdata_y, testdata_preY)
 print(accuracy_value)
-#精确率
 precison_value=precision_score(testdata_y, testdata_preY)
 print(precison_value)
-#召回率
 recall_value=recall_score(testdata_y, testdata_preY)
 print(recall_value)
 f_value=(precison_value*recall_value*2)/(precison_value+recall_value)
@@ -389,12 +367,12 @@ print(f_value)
 # In[ ]:
 
 
-#主成分分析 数据降维度
+#PCA
 from sklearn.decomposition import PCA
 def getPCAData(data,comp):
     pcaClf = PCA(n_components=comp, whiten=True)
     pcaClf.fit(data)
-    data_PCA = pcaClf.transform(data) # 用来降低维度
+    data_PCA = pcaClf.transform(data)  
     return data_PCA
 
 def modiData(data):
@@ -405,7 +383,6 @@ def modiData(data):
         x2.append(data[i][1])
     x1=np.array(x1)
     x2=np.array(x2)
-    #重塑数据
     X=np.array(list(zip(x1,x2))).reshape(len(x1),2)
     return X
 
@@ -421,11 +398,11 @@ from mpl_toolkits.mplot3d import Axes3D
 # In[ ]:
 
 
-# 欧氏距离计算
+# Euclidean distance  
 def distEclud(x,y):
     return np.sqrt(np.sum((x-y)**2))  
  
-# K个质心的集合
+ 
 def randCent(dataSet,k):
     m,n = dataSet.shape
     centroids = np.zeros((k,n))
@@ -440,20 +417,18 @@ def MYKMeans(dataSet,k):
     clusterAssment = np.mat(np.zeros((m,2)))
     clusterChange = True
  
-    # 初始化centroids
+    # initialise centroids
     centroids = randCent(dataSet,k)
     while clusterChange:
         clusterChange = False
- 
-        # 遍历所有的样本（行数）
+  
         for i in range(m):
             minDist = 100000.0
             minIndex = -1
  
-            # 遍历所有的质心
+    
           
-            for j in range(k):
-                # 计算该样本到质心的欧式距离
+            for j in range(k):           
                 distance = distEclud(centroids[j,:],dataSet[i,:])
                 if distance < minDist:
                     minDist = distance
