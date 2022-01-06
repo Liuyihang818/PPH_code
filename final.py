@@ -200,7 +200,7 @@ df.loc[:,'Hormone']= OrdinalEncoder().fit_transform(tempvalue)
 tempvalue=df.loc[:,'Mode of delivery'].values.reshape(-1,1)
 df.loc[:,'Mode of delivery']= OrdinalEncoder().fit_transform(tempvalue)
 dn=df
-del dn["出血标注"]
+del dn["PPH_index"]
 data_normalized =preprocessing.normalize(dn,norm='l1') 
 data_normalized
 
